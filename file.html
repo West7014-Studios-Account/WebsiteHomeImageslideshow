@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Image Gallery</title>
+	<style>
+		img {
+			max-width: 100%;
+			height: auto;
+			display: none;
+		}
+		.active {
+			display: block;
+		}
+		.controls {
+			display: flex;
+			justify-content: center;
+			margin-top: 10px;
+		}
+		.controls button {
+			margin: 0 5px;
+		}
+		.image-count {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-top: 10px;
+		}
+	</style>
+</head>
+  <body>
+	<div class="image-gallery">
+		<img class="slide active" src="https://d15k2d11r6t6rl.cloudfront.net/public/users/Integrators/BeeProAgency/931338_915729/W7sNewProductsSiteImage4-15-2023.png">
+		<img class="slide" src="https://d15k2d11r6t6rl.cloudfront.net/public/users/Integrators/BeeProAgency/931338_915729/w7sTheFinalLocationTeaser3.png">
+		<img class="slide" src="https://d15k2d11r6t6rl.cloudfront.net/public/users/Integrators/BeeProAgency/931338_915729/w7sTheFinalLocationTeaser2.png">
+		<img class="slide" src="https://d15k2d11r6t6rl.cloudfront.net/public/users/Integrators/BeeProAgency/931338_915729/W7s%20Teaser%20%235%20-%20You%20Are%20Not%20Safe.png">
+		<img class="slide" src="https://d15k2d11r6t6rl.cloudfront.net/public/users/Integrators/BeeProAgency/931338_915729/W7sSitesPromoImage.png">
+		<div class="controls">
+			<button id="prev-btn">&#171;</button>
+			<button id="play-pause-btn">&#124;&#124;</button>
+			<button id="next-btn">&#187;</button>
+		</div>
+		<div class="image-count">
+			<span id="current-image">1</span> / <span id="total-images">5</span>
+			<input id="image-input" type="range" min="1" max="5" step="1" value="1">
+		</div>
+	</div>
+	<script>
+        // Get the necessary elements
+const slides = document.querySelectorAll('.slide');
+const prevBtn = document.getElementById('prev-btn');
+const playPauseBtn = document.getElementById('play-pause-btn');
+const nextBtn = document.getElementById('next-btn');
+const currentImage = document.getElementById('current-image');
+const totalImages = document.getElementById('total-images');
+const imageInput = document.getElementById('image-input');
+
+// Initialize variables
+let currentIndex = 0;
+let intervalId;
+let isPlaying = true;
+
+// Set up the slideshow
+const startSlideshow = () => {
+  slides[currentIndex].classList.remove('active');
+  if (currentIndex === slides.length - 1) {
+    currentIndex = 0;
+  } else {
+    currentIndex++;
+  }
+  slides[currentIndex].classList.add('active');
+  currentImage.textContent = currentIndex + 1;
+  imageInput.value = currentIndex + 1;
+};
+
+// Set up the interval timer
+const startInterval = () => {
+  intervalId = setInterval(startSlideshow, 15000);
+};
+
+// Start the slideshow
+startInterval();
+
+// Add event listeners for the buttons
+prevBtn.addEventListener('click', () => {
+  clearInterval(intervalId);
+  slides[currentIndex].classList.remove('active');
+  if (currentIndex === 0) {
+    currentIndex = slides.length - 1;
+  } else {
+    currentIndex--;
+  }
+  slides[currentIndex].classList.add('active');
+  currentImage.textContent = currentIndex + 1;
+  imageInput.value = currentIndex + 1;
+  if (isPlaying) {
+    startInterval();
+  }
+});
+
+nextBtn.addEventListener('click', () => {
+  clearInterval(intervalId);
+  slides[currentIndex].classList.remove('active');
+  if (currentIndex === slides.length - 1) {
+    currentIndex = 0;
+  } else {
+    currentIndex++;
+  }
+  slides[currentIndex].classList.add('active');
+  currentImage.textContent = currentIndex + 1;
+  imageInput.value = currentIndex + 1;
+  if (isPlaying) {
+    startInterval();
+  }
+});
+
+playPauseBtn.addEventListener('click', () => {
+  if (isPlaying) {
+    clearInterval(intervalId);
+    playPauseBtn.textContent = '|>';
+  } else {
+    startInterval();
+    playPauseBtn.textContent = '||';
+  }
+  isPlaying = !isPlaying;
+});
+
+imageInput.addEventListener('input', () => {
+  clearInterval(intervalId);
+  slides[currentIndex].classList.remove('active');
+  currentIndex = parseInt(imageInput.value) - 1;
+  slides[currentIndex].classList.add('active');
+  currentImage.textContent = currentIndex + 1;
+  if (isPlaying) {
+    startInterval();
+  }
+});
+
+// Set up the total images count
+totalImages.textContent = slides.length;
+    </script>
+  </body>
+</html>
